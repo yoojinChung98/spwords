@@ -25,6 +25,8 @@ spring:
 
   ai:
     openai:
+      base-url: default
+      api-key: default
       chat:
         options:
           model: llama3-70b-8192
