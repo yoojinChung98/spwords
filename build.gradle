@@ -1,0 +1,68 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.4.4'
+    id 'io.spring.dependency-management' version '1.1.7'
+}
+
+ext {
+    springAiVersion = "1.0.0-M6"
+}
+
+group = 'com.project'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+
+    // spring ai 는 아직 개발중이라 다음과 같은 주소가 필요한걸까?
+    maven { url 'https://repo.spring.io/milestone' }
+    maven { url 'https://repo.spring.io/snapshot' }
+    maven {
+        name = 'Central Portal Snapshots'
+        url = 'https://central.sonatype.com/repository/maven-snapshots/'
+    }
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+//    implementation platform("org.springframework.ai:spring-ai-bom:1.0.0-SNAPSHOT")
+
+    // spring ai MileStone
+//    implementation("org.springframework.ai:spring-ai-core")
+    // OpenAI 와 연동 ( To get started we need this package)
+    implementation 'org.springframework.ai:spring-ai-openai-spring-boot-starter'
+    // Ollama 와 연동
+//    implementation("group.springframework.ai:spring-ai-ollama:1.1.0")
+    // Groq용 starter (LLaMA3 를 제공하는 클라우드 API 사용 목적)
+//    implementation 'org.springframework.ai:spring-ai-groq-spring-boot-starter:0.8.1'
+
+    compileOnly 'org.projectlombok:lombok'
+    runtimeOnly 'com.mysql:mysql-connector-j'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.ai:spring-ai-bom:$springAiVersion"
+    }
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
